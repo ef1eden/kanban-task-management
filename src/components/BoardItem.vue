@@ -1,31 +1,31 @@
 <template>
-  <div class="home">
-      <BoardItem v-for="board in Boards" :key="board.name" :board="board" />
-  </div>
+    <div class="board-wrapper">
+        <!-- list 1 -->
+        <BoardColumn v-for="column in board.columns" :key="column.name" :column="column" />
+        <!-- add column -->
+        <div class="new-column">
+        <div class="inner-wrapper">
+            <span class="text">+ New Column</span>
+        </div>
+        </div>
+    </div>
 </template>
 
 <script>
-import BoardItem from '@/components/BoardItem.vue';
-import { computed } from '@vue/runtime-core';
-import { useStore } from 'vuex';
+import BoardColumn from '@/components/BoardColumn.vue';
 
 export default {
-  name: 'HomeView',
-  components: {
-    BoardItem
-  },
-  setup() {
-    const store = useStore();
-    
+    name: 'BoardItem',
+    props: {
+        board: {
+            type: Object,
+            required: true,
+        }
+    },
+    components: { BoardColumn },
+    setup() {
 
-    function toggleSidebar() {
-      store.commit('TOGGLE_SIDEBAR');
     }
-    return { 
-      toggleSidebar,
-      Boards: computed(() => store.state.boards),
-    }
-  }
 }
 </script>
 
@@ -74,4 +74,5 @@ export default {
 
   
 }
+
 </style>

@@ -1,30 +1,117 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div class="app" :class="currentTheme">
+    <SideBar />
+    <TopBar />
+    <div class="app-wrapper" :class="{ hidden : sidebarHidden }">
+      <router-view/>
+    </div>
+  </div>
 </template>
 
+<script>
+import TopBar from '@/components/TopBar.vue';
+import SideBar from '@/components/SideBar.vue';
+import { computed } from '@vue/runtime-core';
+import { useStore } from 'vuex';
+
+export default {
+  name: "app",
+  components: { TopBar, SideBar },
+  setup() {
+    const store = useStore();
+    
+    return {
+      currentTheme: computed(() => store.state.currentTheme),
+      sidebarHidden: computed(() => store.state.toggleSidebar),
+    }
+  }
+}
+</script>
+
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-nav {
-  padding: 30px;
+@font-face {
+    font-family: "PlusJakartaSans";
+    font-weight: 700;
+    font-style: normal;
+    font-display: auto;
+    src: url("./assets/fonts/PlusJakartaSans-Bold.woff2") format("woff2"), url("./assets/fonts/PlusJakartaSans-Bold.woff") format("woff");
+}
+@font-face {
+    font-family: "PlusJakartaSans";
+    font-weight: 500;
+    font-style: normal;
+    font-display: auto;
+    src: url("./assets/fonts/PlusJakartaSans-Medium.woff2") format("woff2"), url("./assets/fonts/PlusJakartaSans-Medium.woff") format("woff");
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+html, body {
+	position: relative;
+	overflow-x: hidden;
+	-webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: $font-family-main;
+  margin: 0;
+  padding: 0;
+}
 
-    &.router-link-exact-active {
-      color: #42b983;
+.app {
+  position: relative;
+	overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: $font-family-main;
+  margin: 0;
+  padding: 0;
+  background: $light-grey;
+  transition: all .4s ease;
+
+  &.light {
+    background: $light-grey;
+  }
+  &.dark {
+    background: $very-dark;
+
+    .app-wrapper {
+      color: #fff;
     }
+  }
+}
+
+.app-wrapper {
+  overflow-x: auto;
+  margin-left: 300px;
+  color: $black-color;
+  transition: all .4s ease;
+  min-height: calc(100vh - 97px);
+  max-height: calc(100vh - 97px);
+
+  &::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 0;
+    background: rgba(176,176,176,0.1);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    background: rgba(176,176,176,0.4);
+
+    &:hover {
+      background: rgba(176,176,176,0.7);
+    }
+  }
+
+  &.hidden {
+    margin-left: 0;
   }
 }
 </style>
