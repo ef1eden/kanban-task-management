@@ -1,13 +1,13 @@
 <template>
   <div class="topbar" :class="[{ hidden : sidebarHidden }, currentTheme]">
     <div class="logo-placeholder">
-        <router-link class="logo" to="/">
+        <span class="logo">
              <inline-svg :src="require('@/assets/svg/logo-dark.svg')"/>
-        </router-link>
+        </span>
     </div>
     <div class="board-info">
         <div class="name">
-            Platform Launch
+            {{ activeBoard }}
         </div>
         <div class="wrapper">
             <div class="addtask">
@@ -44,6 +44,7 @@ export default {
       return {
         currentTheme: computed(() => store.state.currentTheme),
         sidebarHidden: computed(() => store.state.toggleSidebar),
+        activeBoard: computed(() => store.state.activeBoard),
       }
     }
 }

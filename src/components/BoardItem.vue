@@ -1,7 +1,8 @@
 <template>
-    <div class="board-wrapper">
+<Transition name="fade" mode="out-in">
+    <div v-show="activeBoard === board.name" class="board-wrapper">
         <!-- list 1 -->
-        <BoardColumn v-for="column in board.columns" :key="column.name" :column="column" />
+        <BoardColumn v-for="column in board.columns" :key="column.id" :column="column" />
         <!-- add column -->
         <div class="new-column">
         <div class="inner-wrapper">
@@ -9,10 +10,13 @@
         </div>
         </div>
     </div>
+</Transition>
 </template>
 
 <script>
 import BoardColumn from '@/components/BoardColumn.vue';
+import { useStore } from 'vuex';
+import { computed } from '@vue/runtime-core';
 
 export default {
     name: 'BoardItem',
@@ -24,15 +28,31 @@ export default {
     },
     components: { BoardColumn },
     setup() {
+      const store = useStore();
 
+      return {
+        activeBoard: computed(() => store.state.activeBoard),
+      }
     }
 }
 </script>
 
 <style lang="scss" scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: all .4s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .board-wrapper {
   padding: 24px 24px 20px 24px;
   display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
 
   .new-column {
     width: 304px;

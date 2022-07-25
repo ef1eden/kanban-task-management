@@ -3,7 +3,8 @@
     <SideBar />
     <TopBar />
     <div class="app-wrapper" :class="{ hidden : sidebarHidden }">
-      <router-view/>
+      
+        <BoardItem v-for="board in Boards" :key="board.id" :board="board" />
     </div>
   </div>
 </template>
@@ -11,18 +12,25 @@
 <script>
 import TopBar from '@/components/TopBar.vue';
 import SideBar from '@/components/SideBar.vue';
-import { computed } from '@vue/runtime-core';
+import BoardItem from '@/components/BoardItem.vue';
+import { computed, onMounted } from '@vue/runtime-core';
 import { useStore } from 'vuex';
 
 export default {
   name: "app",
-  components: { TopBar, SideBar },
+  components: { TopBar, SideBar, BoardItem },
   setup() {
     const store = useStore();
+
+    onMounted(() => {
+      store.commit('SET_ACTIVE_BOARD_ON_LOAD');
+    })
     
     return {
       currentTheme: computed(() => store.state.currentTheme),
       sidebarHidden: computed(() => store.state.toggleSidebar),
+      
+      Boards: computed(() => store.state.boards),
     }
   }
 }
@@ -84,6 +92,8 @@ html, body {
 }
 
 .app-wrapper {
+  position: relative;
+  overflow-y: hidden;
   overflow-x: auto;
   margin-left: 300px;
   color: $black-color;
@@ -114,4 +124,6 @@ html, body {
     margin-left: 0;
   }
 }
+
+
 </style>

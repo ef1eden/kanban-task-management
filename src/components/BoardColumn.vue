@@ -5,13 +5,27 @@
         <span class="name">{{ column.name }} (4)</span>
     </div>
     <div class="card-wrapper">
-        <BoardCard v-for="(task, index) in column.tasks" :key="index" :task="task" />
+        <draggable 
+            v-model="cards" 
+            group="tasks" 
+            item-key="id"
+            drag-class="drag"
+            ghost-class="ghost"
+            class="drop-zone"
+        >
+            <template #item="{element}">
+                <BoardCard class="card-item" :task="element" />
+            </template>
+        </draggable>
+        
     </div>
   </div>
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 import BoardCard from '@/components/BoardCard.vue';
+import { computed } from '@vue/runtime-core';
 
 export default {
     name: 'BoardItem',
@@ -21,14 +35,56 @@ export default {
             required: true,
         }
     },
-    components: { BoardCard },
+    components: { BoardCard, draggable },
     setup(props) {
-        console.log(props.column);
+        let todos = {
+            boards: [
+                {
+                    id : 1,
+                    name : 'test'
+                },
+                {
+                    id : 2,
+                    name : 'test2'
+                },
+                {
+                    id : 3,
+                    name : 'test3'
+                },
+                {
+                    id : 4,
+                    name : 'test4'
+                },
+            ]
+        }
+
+
+        const cards = computed({
+            get() {
+                return props.column.tasks;
+            },
+            set(newValue) {
+                console.log(newValue);
+            }
+        })
+
+        return { todos, cards }
     }
 }
 </script>
 
 <style lang="scss" scoped>
+.ghost {
+    border: 1px $main-color dashed;
+
+    :deep(.text) {
+        color: $main-color;
+    }
+}
+.drop-zone {
+    min-height: 115px;
+}
+
 .list-item {
     width: 304px;
     min-width: 304px;
