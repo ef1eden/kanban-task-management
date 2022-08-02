@@ -29,7 +29,7 @@ export default {
     setup() {
       const store = useStore();
 
-      function switchMode() {
+      const switchMode = () => {
         store.commit('TOGGLE_MODE');
       }
       
@@ -47,7 +47,7 @@ export default {
     justify-content: space-between;
     background: $light-grey;
     border-radius: 6px;
-    margin-bottom: 22px;
+    margin-bottom: 7px;
     transition: all .4s ease;
 
     .switch-wrapper {

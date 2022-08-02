@@ -1,8 +1,8 @@
 <template>
   <div class="list-item">
     <div class="label">
-        <span class="color todo"></span>
-        <span class="name">{{ column.name }} (4)</span>
+        <span class="color" :style="{ background: column.color }"></span>
+        <span class="name">{{ column.name }} ({{ column.tasks.length }})</span>
     </div>
     <div class="card-wrapper">
         <draggable 
@@ -24,7 +24,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import BoardCard from '@/components/BoardCard.vue';
+import BoardCard from '@/components/Board/BoardCard.vue';
 import { computed } from '@vue/runtime-core';
 
 export default {
@@ -78,7 +78,7 @@ export default {
     border: 1px $main-color dashed;
 
     :deep(.text) {
-        color: $main-color;
+        color: $main-color !important;
     }
 }
 .drop-zone {

@@ -1,5 +1,5 @@
 <template>
-    <div class="card-item">
+    <div class="card-item" :class="currentTheme">
         <div class="text">
             {{ task.title }}
         </div>
@@ -11,7 +11,8 @@
 
 <script>
 import { ref } from '@vue/reactivity';
-import { watch } from '@vue/runtime-core';
+import { computed, watch } from '@vue/runtime-core';
+import { useStore } from 'vuex';
 export default {
     name: 'BoardCard',
     props: {
@@ -21,6 +22,7 @@ export default {
         }
     },
     setup(props) {
+        const store = useStore();
         const countCompletedSubtasks = ref(props.task.subtasks);
         const completedSubtasks = ref(0);
 
@@ -42,7 +44,10 @@ export default {
         { deep: true }
         )    
 
-        return { completedSubtasks }
+        return { 
+            currentTheme: computed(() => store.state.currentTheme),
+            completedSubtasks 
+        }
     }
 }
 </script>
@@ -61,6 +66,7 @@ export default {
     padding: 23px 16px 22px;
     border: 1px solid transparent;
     cursor: pointer;
+    transition: background .4s ease;
 
     &:last-child {
         margin-bottom: 8px;
@@ -81,6 +87,21 @@ export default {
         font-weight: 700;
         line-height: 15px;
         color: $medium-grey;
+    }
+
+    &.light {
+        background: #fff;
+
+        .text {
+            color: $black-color;
+        }
+    }
+    &.dark {
+        background: $dark-grey;
+
+        .text {
+            color: #fff;
+        }
     }
 }
 </style>

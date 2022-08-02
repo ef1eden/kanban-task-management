@@ -1,20 +1,20 @@
 <template>
 <Transition name="fade" mode="out-in">
-    <div v-show="activeBoard === board.name" class="board-wrapper">
+    <div v-show="activeBoard === board.id" class="board-wrapper">
         <!-- list 1 -->
         <BoardColumn v-for="column in board.columns" :key="column.id" :column="column" />
         <!-- add column -->
-        <div class="new-column">
-        <div class="inner-wrapper">
-            <span class="text">+ New Column</span>
-        </div>
+        <div class="new-column" :class="currentTheme">
+          <div class="inner-wrapper">
+              <span class="text">+ New Column</span>
+          </div>
         </div>
     </div>
 </Transition>
 </template>
 
 <script>
-import BoardColumn from '@/components/BoardColumn.vue';
+import BoardColumn from '@/components/Board/BoardColumn.vue';
 import { useStore } from 'vuex';
 import { computed } from '@vue/runtime-core';
 
@@ -32,21 +32,13 @@ export default {
 
       return {
         activeBoard: computed(() => store.state.activeBoard),
+        currentTheme: computed(() => store.state.currentTheme)
       }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: all .4s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
 .board-wrapper {
   padding: 24px 24px 20px 24px;
   display: flex;
@@ -71,6 +63,7 @@ export default {
       border-radius: 8px;
       margin-top: 39px;
       cursor: pointer;
+      transition: all .4s ease;
 
       .text {
         color: $medium-grey;
@@ -80,6 +73,18 @@ export default {
         text-align: center;
         padding-bottom: 14px;
         transition: all .4s ease;
+      }
+    }
+
+    &.light {
+      .inner-wrapper {
+        background: #E9EFFA;
+      }
+    }
+
+    &.dark {
+      .inner-wrapper {
+        background: rgba(17,17,22,0.25);
       }
     }
 

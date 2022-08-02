@@ -1,5 +1,5 @@
 <template>
-    <div @click="toggleSidebar" class="hide-sidebar">
+    <div @click="toggleSidebar" class="hide-sidebar" :class="currentTheme">
         <span class="icon">
             <inline-svg :src="require('@/assets/svg/icon-hide-sidebar.svg')"/>
         </span>
@@ -12,6 +12,7 @@
 <script>
 import { useStore } from 'vuex';
 import InlineSvg from 'vue-inline-svg';
+import { computed } from '@vue/runtime-core';
 
 export default {
     name: 'BtnHideSidebar',
@@ -21,11 +22,12 @@ export default {
     setup() {
       const store = useStore();
 
-      function toggleSidebar() {
+      const toggleSidebar = () => {
         store.commit('TOGGLE_SIDEBAR');
       }
 
       return {
+        currentTheme: computed(() => store.state.currentTheme),
         toggleSidebar,
       }
     }
@@ -41,11 +43,31 @@ export default {
     display: flex;
     align-items: center;
     margin-left: -24px;
-    padding-left: 24px;
+    padding-left: 32px;
     z-index: 2;
     position: relative;
     cursor: pointer;
     transition: all .4s ease;
+
+    &.light {
+        &:hover {
+            background: rgba(99,95,199,0.1);
+        }
+
+        &.active {
+            background: $main-color;
+        }
+    }
+
+    &.dark {
+        &:hover {
+            background: #fff;
+        }
+
+        &.active {
+            background: $main-color;
+        }
+    }
 
     .icon {
         position: relative;

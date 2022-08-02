@@ -3,7 +3,6 @@
     <SideBar />
     <TopBar />
     <div class="app-wrapper" :class="{ hidden : sidebarHidden }">
-      
         <BoardItem v-for="board in Boards" :key="board.id" :board="board" />
     </div>
   </div>
@@ -11,8 +10,8 @@
 
 <script>
 import TopBar from '@/components/TopBar.vue';
-import SideBar from '@/components/SideBar.vue';
-import BoardItem from '@/components/BoardItem.vue';
+import SideBar from '@/components/SideBar/SideBar.vue';
+import BoardItem from '@/components/Board/BoardItem.vue';
 import { computed, onMounted } from '@vue/runtime-core';
 import { useStore } from 'vuex';
 
@@ -29,8 +28,7 @@ export default {
     return {
       currentTheme: computed(() => store.state.currentTheme),
       sidebarHidden: computed(() => store.state.toggleSidebar),
-      
-      Boards: computed(() => store.state.boards),
+      Boards: computed(() => store.state.boards.data),
     }
   }
 }
@@ -125,5 +123,62 @@ html, body {
   }
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: all .4s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
 
+input[type=text] {
+    font-family: $font-family-main;
+    width: 100%;
+    height: 40px;
+    border: 1px solid rgba(130,143,163,0.25);
+    border-radius: 4px;
+    padding: 5px 14px 7px;
+    font-size: 13px;
+    transition: all .4s ease;
+    color: $black-color;
+
+    &:focus {
+        outline: none;
+    }
+
+    &::placeholder {
+        color: rgba(0,1,18,0.25);
+    }
+}
+.btn {
+    width: 100%;
+    height: 40px;
+    background: $main-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: $font-family-main;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 23px;
+    color: #FFF;
+    border-radius: 20px;
+    border: 0;
+    transition: all .4s ease;
+    cursor: pointer;
+
+    &:hover {
+        background: $main-color-hover;
+    }
+
+    &--light-purple {
+      background: rgba(99,95,199,0.1);
+      color: $main-color;
+
+      &:hover {
+        background: rgba(99,95,199,0.25);
+      }
+    }
+}
 </style>

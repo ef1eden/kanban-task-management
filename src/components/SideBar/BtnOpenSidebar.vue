@@ -14,7 +14,7 @@ export default {
     setup() {
       const store = useStore();
 
-      function toggleSidebar() {
+      const toggleSidebar = () => {
         store.commit('TOGGLE_SIDEBAR');
       }
 

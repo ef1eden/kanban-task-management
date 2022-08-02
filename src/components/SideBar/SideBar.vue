@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import SideBarMenu from '@/components/SideBarMenu.vue';
-import SwitchTheme from '@/components/SwitchTheme.vue';
-import BtnHideSidebar from '@/components/BtnHideSidebar.vue'
-import BtnOpenSidebar from '@/components/BtnOpenSidebar.vue'
+import SideBarMenu from '@/components/SideBar/SideBarMenu.vue';
+import SwitchTheme from '@/components/SideBar/SwitchTheme.vue';
+import BtnHideSidebar from '@/components/SideBar/BtnHideSidebar.vue'
+import BtnOpenSidebar from '@/components/SideBar/BtnOpenSidebar.vue'
 import { computed } from '@vue/runtime-core';
 import { useStore } from 'vuex'
 
@@ -48,7 +48,7 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding-bottom: 47px;
+    padding-bottom: 34px;
     transition: all .4s ease;
     z-index: 10;
 

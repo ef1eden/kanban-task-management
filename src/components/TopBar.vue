@@ -7,44 +7,54 @@
     </div>
     <div class="board-info">
         <div class="name">
-            {{ activeBoard }}
+            {{ activeBoardName }}
         </div>
         <div class="wrapper">
             <div class="addtask">
-                <span class="button">
+                <span class="button" @click="toggleModal">
                     + Add New Task
                 </span>
             </div>
             <div class="editboard">
                 <img width="5" height="20" src="@/assets/svg/icon-vertical-ellipsis.svg" alt="Edit board">
             </div>
-            <div class="login">
-                <img width="42" height="42" src="@/assets/img/login-avatar.jpg" alt="Profile">
-            </div>
         </div>
     </div>
+    <Modal :modalActive="modalActive" @close-modal="toggleModal">
+        <div class="modal-content">
+            <h1>topbar</h1>
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus l</p>
+        </div>
+    </Modal>
   </div>
 
   
 </template>
 
 <script>
-import { computed } from '@vue/runtime-core';
+import Modal from '@/components/Modal/Modal.vue';
+import { computed, ref } from '@vue/runtime-core';
 import { useStore } from 'vuex';
 import InlineSvg from 'vue-inline-svg';
 
 export default {
     name: 'TopBar',
     components: {
-        InlineSvg
+        Modal, InlineSvg
     },
     setup() {
       const store = useStore();
+      const modalActive = ref(false);
+
+      const toggleModal = () => {
+        modalActive.value = !modalActive.value;
+      }
 
       return {
         currentTheme: computed(() => store.state.currentTheme),
         sidebarHidden: computed(() => store.state.toggleSidebar),
-        activeBoard: computed(() => store.state.activeBoard),
+        activeBoardName: computed(() => store.state.activeBoardName),
+        modalActive, toggleModal
       }
     }
 }
@@ -132,7 +142,7 @@ export default {
             color: $black-color;
             position: relative;
             top: -1px;
-            transition: all .4s ease;
+            transition: color .4s ease;
         }
 
         .wrapper {
