@@ -95,7 +95,7 @@ export default {
     z-index: 100;
 }
 .sidebar {
-    display: flex;
+    display: none;
     width: 264px;
     position: absolute;
     top: 80px;
@@ -111,6 +111,10 @@ export default {
     box-shadow: 0px 10px 20px rgba(54, 78, 126, 0.25);
     border-radius: 8px;
     z-index: 101;
+
+    @media(max-width: 700px) {
+        display: flex;
+    }
 
     &.light {
         background: #fff;

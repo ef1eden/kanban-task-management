@@ -263,13 +263,17 @@ export default {
                 top: 1px;
                 width: 30px;
                 height: 30px;
-                display: flex;
+                display: none;
                 align-items: center;
                 justify-content: center;
                 transition: all .4s ease;
 
                 &.rotated {
                     transform: rotate(-180deg);
+                }
+
+                @media(max-width: 700px) {
+                    display: flex;
                 }
             }
         }

@@ -105,6 +105,8 @@ html, body {
 
   @media(max-width: 700px) {
       margin-left: 0;
+      min-height: calc(100vh - 65px);
+      max-height: calc(100vh - 65px);
   }
 
   &::-webkit-scrollbar {
