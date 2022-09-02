@@ -7,7 +7,7 @@
             </label>
             <span class="validate" :class="{errortext: formError}">
                 <input type="text" 
-                    v-model="boardName" placeholder="e.g. Web Design"
+                    v-model="currentBoard" placeholder="e.g. Web Design"
                     :class="[{error: formError}, currentTheme]"
                 >
             </span>
@@ -17,17 +17,17 @@
                 <div class="label" :class="currentTheme">Columns</div>
             </div>
             <ModalBoardColumnList 
-                v-for="column in newBoard.columns" 
+                v-for="column in currentBoardData.columns" 
                 :key="column.id" :column="column" 
                 @model-value="modelValue" 
                 @update-color="modelColorValue"
                 @remove-column="removeColumn"
-            />  
+            />
         </div>
         <button @click.prevent="addNewColumn" class="btn btn--light-purple btn--margin" :class="currentTheme">
             + Add New Column
         </button>
-        <input type="submit" value="Create New Board" class="btn">
+        <input type="submit" value="Save Changes" class="btn">
     </form>
   </div>
 </template>
@@ -35,53 +35,62 @@
 <script>
 import ModalBoardColumnList from '@/components/Modal/ModalBoardColumnList.vue';
 import { ref } from '@vue/reactivity';
-import { computed, onBeforeUnmount } from '@vue/runtime-core';
+import { computed } from '@vue/runtime-core';
 import { useStore } from 'vuex';
+import { uuid } from 'vue3-uuid';
 
 export default {
-    name: 'ModalBoard',
+    name: 'ModalBoardEdit',
     components: {
         ModalBoardColumnList
     },
     setup(props, { emit }) {
       const store = useStore();
-      const boardName = ref(null);
       const formError = ref(false);
-      
+      const currentBoard = ref(store.state.activeBoardName);
+      const currentBoardID = ref(store.state.activeBoard);
+      const copyOfBoard = JSON.parse(JSON.stringify(store.state.boards));
+      const filterCopyOfBoard = copyOfBoard.data.filter(i => {
+          return i.id == currentBoardID.value;
+      });
+      const currentBoardData = ref(filterCopyOfBoard[0]);
+    
       const modelValue = (e) => {
-        let findID = store.state.newBoard.columns.find(({ id }) => id === e.id );
+        let findID = currentBoardData.value.columns.find(el => el.id === e.id);
         findID.name = e.name;
       }
       const modelColorValue = val => {
-        let findID = store.state.newBoard.columns.find(({ id }) => id === val.value.id );
+        let findID = currentBoardData.value.columns.find(el => el.id === val.value.id);
         findID.color = val.value.color;
       }
       const removeColumn = val => {
-        store.commit('REMOVE_COLUMN_IN_NEW_BOARD', val);
+        const removeColumn = currentBoardData.value.columns.filter(t => t.id !== val);
+        currentBoardData.value.columns = removeColumn;
       }
       const addNewColumn = () => {
-        store.commit('ADD_COLUMN_IN_NEW_BOARD');
+        currentBoardData.value.columns.push({
+            id: uuid.v4(),
+            name: null,
+            color: '#635FC7',
+            tasks: []
+        }); 
       }
       const addNewBoard = () => {
-        if(boardName.value === null || boardName.value.trim() === '') {
+        if(currentBoard.value === null || currentBoard.value.trim() === '') {
             formError.value = true;
             return;
         }
         formError.value = false;
-        store.dispatch('ADD_NEW_BOARD', boardName.value);
+        currentBoardData.value.name = currentBoard.value;
+        store.dispatch('EDIT_BOARD', currentBoardData.value);
         emit('closeModal');
-        setTimeout(() => boardName.value = null, 1000);
       }
-
-      onBeforeUnmount(() => {
-        setTimeout(() => boardName.value = null, 1000);
-      })
   
       return {
-        boardName, addNewBoard, formError, modelValue, 
+        addNewBoard, formError, modelValue, 
         modelColorValue, removeColumn, addNewColumn,
-        newBoard: computed(() => store.state.newBoard),
-        currentTheme: computed(() => store.state.currentTheme)
+        currentTheme: computed(() => store.state.currentTheme),
+        currentBoard, currentBoardData
       }
     }
 }

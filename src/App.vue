@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import TopBar from '@/components/TopBar.vue';
+import TopBar from '@/components/TopBar/TopBar.vue';
 import SideBar from '@/components/SideBar/SideBar.vue';
 import BoardItem from '@/components/Board/BoardItem.vue';
 import { computed, onMounted } from '@vue/runtime-core';
@@ -99,6 +99,14 @@ html, body {
   min-height: calc(100vh - 97px);
   max-height: calc(100vh - 97px);
 
+  @media(max-width: 991px) {
+      margin-left: 261px;
+  }
+
+  @media(max-width: 700px) {
+      margin-left: 0;
+  }
+
   &::-webkit-scrollbar {
     width: 14px;
     height: 14px;
@@ -132,7 +140,7 @@ html, body {
   opacity: 0;
 }
 
-input[type=text] {
+input[type=text], select, textarea {
     font-family: $font-family-main;
     width: 100%;
     height: 40px;
@@ -142,6 +150,7 @@ input[type=text] {
     font-size: 13px;
     transition: all .4s ease;
     color: $black-color;
+    background: none;
 
     &:focus {
         outline: none;
@@ -150,6 +159,35 @@ input[type=text] {
     &::placeholder {
         color: rgba(0,1,18,0.25);
     }
+
+    &.light {
+      color: $black-color;
+
+      &::placeholder {
+        color: rgba(0,1,18,0.25);
+      }
+    }
+    &.dark {
+        color: #fff;
+
+        &::placeholder {
+          color: rgba(255,255,255,0.25);
+        }
+    }
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg width='11' height='8' viewBox='0 0 11 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0.798828 1.54863L5.49731 6.24711L10.1958 1.54863' stroke='%23635FC7' stroke-width='2'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position-x: 96%;
+  background-position-y: 15px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: '';
+}
+textarea {
+  height: 112px;
+  line-height: 23px;
 }
 .btn {
     width: 100%;
@@ -176,8 +214,25 @@ input[type=text] {
       background: rgba(99,95,199,0.1);
       color: $main-color;
 
+      &.light {
+        background: rgba(99,95,199,0.1);
+        color: $main-color;
+
+        &:hover {
+          background: rgba(99,95,199,0.25);
+        }
+      }
+      &.dark {
+          background: #FFF;
+          color: $main-color;
+      }
+    }
+
+    &--red {
+      background: $red-color;
+      
       &:hover {
-        background: rgba(99,95,199,0.25);
+        background: $red-color-hover;
       }
     }
 }

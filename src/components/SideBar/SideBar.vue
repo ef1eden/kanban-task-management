@@ -52,6 +52,14 @@ export default {
     transition: all .4s ease;
     z-index: 10;
 
+    @media(max-width: 991px) {
+        width: 261px;
+    }
+
+    @media(max-width: 700px) {
+        display: none;
+    }
+
     &.light {
         background: #fff;
         border-right: 1px solid $light-lines;
@@ -72,6 +80,10 @@ export default {
 
     &.hidden {
       left: -300px;
+
+      @media(max-width: 991px) {
+        left: -261px;
+      }
     }
 
     .boards {
@@ -80,6 +92,10 @@ export default {
 
     .options {
       padding: 0 24px;
+
+      @media(max-width: 991px) {
+          padding: 0 18px;
+      }
     }
 }
 </style>

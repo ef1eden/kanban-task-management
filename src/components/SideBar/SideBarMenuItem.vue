@@ -60,8 +60,16 @@ export default {
     transition: all .4s ease;
     cursor: pointer;
 
+    @media(max-width: 991px) {
+        width: 248px;
+    }
+
     .board-inner {
         padding: 11px 15px 10px 32px;
+
+        @media(max-width: 991px) {
+            padding: 11px 15px 10px 20px;
+        }
 
         .icon {
             margin-right: 16px;

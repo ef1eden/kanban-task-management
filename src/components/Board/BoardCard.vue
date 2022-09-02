@@ -1,20 +1,49 @@
 <template>
-    <div class="card-item" :class="currentTheme">
+    <div class="card-item" :class="currentTheme" @click="toggleModal">
         <div class="text">
             {{ task.title }}
         </div>
         <div class="status">
             {{ completedSubtasks }} of {{ task.subtasks.length }} substasks
         </div>
+        <Modal :modalActive="modalActive" @close-modal="toggleModal">
+            <template v-slot:header>
+                {{ task.title }}
+            </template>
+            <template v-slot:main>
+                <ModalTaskView @close-modal="toggleModal" :task="task" @close-task="toggleModalAndModalDelete" />
+            </template>
+        </Modal>
+        <ModalDelete :modalDeleteActive="modalDeleteActive" @close-modal-delete="toggleModalDelete">
+            <template v-slot:header>
+                Delete this task?
+            </template>
+            <template v-slot:main>
+                <p>Are you sure you want to delete the ‘{{ task.title }}’ task?</p>
+                <div class="buttons">
+                    <input @click="deleteTask" type="submit" value="Delete" class="btn btn--red">
+                    <button @click.prevent="toggleModalDelete" class="btn btn--light-purple btn--margin" :class="currentTheme">
+                        Cancel
+                    </button>
+                </div>
+            </template>
+        </ModalDelete>
     </div>
 </template>
 
 <script>
+import Modal from '@/components/Modal/Modal.vue';
+import ModalTaskView from '@/components/Modal/ModalTaskView.vue';
+import ModalDelete from '@/components/Modal/ModalDelete.vue';
 import { ref } from '@vue/reactivity';
 import { computed, watch } from '@vue/runtime-core';
 import { useStore } from 'vuex';
+
 export default {
     name: 'BoardCard',
+    components: {
+        Modal, ModalTaskView, ModalDelete
+    },
     props: {
         task: {
             type: Object,
@@ -23,8 +52,38 @@ export default {
     },
     setup(props) {
         const store = useStore();
-        const countCompletedSubtasks = ref(props.task.subtasks);
+        const countCompletedSubtasks = computed(() => props.task.subtasks);
         const completedSubtasks = ref(0);
+        const modalActive = ref(false);
+        const modalDeleteActive = ref(false);
+        
+        const toggleModal = () => {
+            modalActive.value = !modalActive.value;
+        }
+
+        const toggleModalAndModalDelete = () => {
+            modalActive.value = !modalActive.value;
+            modalDeleteActive.value = !modalDeleteActive.value;
+        }
+        
+        const toggleModalDelete = () => {
+            modalDeleteActive.value = !modalDeleteActive.value;
+        }
+
+        const deleteTask = () => {
+            const checkStatus = ref(props.task.status);
+            const findStatus = store.state.boards.data.find(i => i.id === store.state.activeBoard);
+            const mapStatus = findStatus.columns.map(status => {
+                return {
+                    id: status.id, 
+                    name: status.name
+                }
+            });
+            const findColumnID = mapStatus.find(el => el.name == checkStatus.value).id;
+
+            store.dispatch('DELETE_TASK', {columnID: findColumnID, taskID: props.task.id});
+            modalDeleteActive.value = !modalDeleteActive.value;
+        }
 
         function setCompletedSubtasks() {
             completedSubtasks.value = 0;
@@ -39,14 +98,16 @@ export default {
         watch(
         () => countCompletedSubtasks,
         () => {
+            console.log('change');
             setCompletedSubtasks();
         },
         { deep: true }
-        )    
+        )
 
         return { 
             currentTheme: computed(() => store.state.currentTheme),
-            completedSubtasks 
+            completedSubtasks, modalActive, toggleModal, modalDeleteActive,
+            toggleModalDelete, toggleModalAndModalDelete, deleteTask
         }
     }
 }

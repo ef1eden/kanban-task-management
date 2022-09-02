@@ -49,6 +49,10 @@ export default {
     cursor: pointer;
     transition: all .4s ease;
 
+    @media(max-width: 991px) {
+        width: 248px;
+    }
+
     &.light {
         &:hover {
             background: rgba(99,95,199,0.1);

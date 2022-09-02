@@ -45,7 +45,7 @@ export default {
         line-height: 15px;
         letter-spacing: 2.4px;
         color: $medium-grey;
-        padding: 0 25px 0 32px;
+        padding: 0 25px 0 20px;
     }
 
     .board-nav {

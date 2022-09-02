@@ -1,71 +1,55 @@
 <template>
-    <div class="column-item-wrap">
-        <div class="column-item">
-            <div class="name-field">
-                <input 
-                    v-model="modelValue.name" :class="currentTheme"
-                    @input="$emit('modelValue', modelValue)" type="text"
-                >
-                <div @click="toggleColorPicker" class="color-picker-btn-wrap">
-                    <div :style="{ background: pickerColor }" class="color-picker-btn"></div>
+    <form @submit.prevent="addNewColumn">
+        <div class="column-item-wrap">
+            <div class="column-item">
+                <div class="name-field">
+                    <input v-model="modelValue" :class="currentTheme" type="text">
+                    <div @click="toggleColorPicker" class="color-picker-btn-wrap">
+                        <div :style="{ background: pickerColor }" class="color-picker-btn"></div>
+                    </div>
                 </div>
             </div>
-            <div @click="$emit('removeColumn', column.id)" class="remove-item">
-                <inline-svg :src="require('@/assets/svg/icon-cross.svg')"/>
-            </div>
+            <Transition name="slide-down">
+                <div class="color-picker-wrap" v-show="setColor">
+                    <div class="color-picker" :class="currentTheme">
+                        <ColorPicker 
+                            :color="modelColorValue" 
+                            alpha-channel="hide"
+                            default-format="hex" 
+                            :visible-formats="['hex']"
+                            @color-change="sendEvent"
+                        >
+                            <template #copy-button>
+                                &nbsp;
+                            </template>
+                        </ColorPicker>
+                    </div>
+                </div> 
+            </Transition>
         </div>
-        <Transition name="slide-down">
-            <div class="color-picker-wrap" v-show="setColor">
-                <div class="color-picker" :class="currentTheme">
-                    <ColorPicker 
-                        :color="column.color" 
-                        alpha-channel="hide"
-                        default-format="hex" 
-                        :visible-formats="['hex']"
-                        @color-change="sendEvent"
-                    >
-                        <template #copy-button>
-                            &nbsp;
-                        </template>
-                    </ColorPicker>
-                </div>
-            </div> 
-        </Transition>
-    </div> 
+        <input type="submit" value="Create New Column" class="btn">
+    </form>
 </template>
 
 <script>
-import InlineSvg from 'vue-inline-svg';
 import { ColorPicker } from 'vue-accessible-color-picker'
 import { ref } from '@vue/reactivity';
 import { computed } from '@vue/runtime-core';
 import { useStore } from 'vuex';
+import { uuid } from 'vue3-uuid';
 
 export default {
-    name: 'ModalBoardColumnList',
-    props: {
-        name: {
-            type: String,
-            required: false,
-        },
-        color: {
-            type: String,
-            required: false,
-        },
-        column: {
-            type: Object,
-            required: false
-        }
-    },
+    name: 'ModalAddColumn',
     components: {
-        InlineSvg, ColorPicker
+        ColorPicker
     },
-    setup(props, { emit }) {
+    setup(props, {emit}) {
       const store = useStore();
+      const newColumnID = uuid.v4();
       const setColor = ref(false);
       const pickerColor = ref(null);
-      const modelValue = ref({ id: props.column.id, name: props.column.name });
-      const modelColorValue = ref({ id: props.column.id, color: '' });
+      const modelValue = ref(null);
+      const modelColorValue = ref('#635FC7');
 
       function toggleColorPicker () {
         setColor.value = !setColor.value;
@@ -73,14 +57,24 @@ export default {
 
       function sendEvent (eventData) {
         pickerColor.value = eventData.cssColor;
-        modelColorValue.value.color = eventData.cssColor;
-        emit('updateColor', modelColorValue);
+        modelColorValue.value = eventData.cssColor;
+      }
+
+      const addNewColumn = () => {
+        const newColumn = ref({
+            id : uuid.v4(),
+            name: modelValue.value,
+            color: modelColorValue.value,
+            tasks: []
+        });
+        store.dispatch('ADD_COLUMN', newColumn.value);
+        emit('closeModal');
       }
       
       return {
         currentTheme: computed(() => store.state.currentTheme),
         toggleColorPicker, pickerColor, sendEvent, setColor, 
-        modelValue
+        modelValue, modelColorValue, newColumnID, addNewColumn
       }
     }
 }

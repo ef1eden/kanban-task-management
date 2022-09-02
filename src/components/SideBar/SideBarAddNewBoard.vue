@@ -26,6 +26,7 @@ import Modal from '@/components/Modal/Modal.vue';
 import ModalBoard from '@/components/Modal/ModalBoard.vue';
 import InlineSvg from 'vue-inline-svg';
 import { ref } from '@vue/reactivity';
+import { useStore } from 'vuex';
 
 export default {
     name: 'SideBarAddNewBoard',
@@ -33,13 +34,17 @@ export default {
         Modal, InlineSvg, ModalBoard
     },
     setup() {
+      const store = useStore();
       const modalActive = ref(false);
       
       const toggleModal = () => {
         modalActive.value = !modalActive.value;
+
+        if(modalActive.value === false) {
+            store.commit('CLEAR_NEW_BOARD');
+        }
       }
 
-  
       return {
         modalActive, toggleModal
       }
@@ -58,8 +63,16 @@ export default {
     transition: all .4s ease;
     cursor: pointer;
 
+    @media(max-width: 991px) {
+        width: 248px;
+    }
+
     .board-inner {
         padding: 11px 15px 10px 32px;
+
+        @media(max-width: 991px) {
+            padding: 11px 15px 10px 20px;
+        }
 
         .icon {
             margin-right: 16px;

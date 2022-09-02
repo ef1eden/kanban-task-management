@@ -2,11 +2,11 @@
   <teleport to="body">
     <div>
         <transition name="modal-animation">
-            <div v-if="modalActive" class="modal-overlay" @click="closeModal">
+            <div v-if="modalDeleteActive" class="modal-overlay" @click="closeModalDelete">
             </div>
         </transition>
         <transition name="modal-animation-inner">
-            <div v-if="modalActive" class="modal" :class="currentTheme">
+            <div v-if="modalDeleteActive" class="modal" :class="currentTheme">
                 <div class="modal-content">
                     <header>
                         <div class="modal-name">
@@ -32,20 +32,20 @@ import { useStore } from 'vuex';
 export default {
     name: 'Modal',
     props: {
-        modalActive: {
+        modalDeleteActive: {
             type: Boolean,
             required: true,
         }
     },
-    emits: ['closeModal'],
+    emits: ['closeModalDelete'],
     setup(props, { emit }) {
       const store = useStore();
-      const closeModal = () => {
-        emit('closeModal')
+      const closeModalDelete = () => {
+        emit('closeModalDelete')
       }   
 
       return {
-        closeModal,
+        closeModalDelete,
         currentTheme: computed(() => store.state.currentTheme)
       }
     }
@@ -102,17 +102,13 @@ export default {
     transform: translate(-50%, -50%);
     max-width: 480px;
     width: 100%;
-    padding: 32px;
+    padding: 32px 32px 40px;
     background: #fff;
     border-radius: 6px;
     max-height: 85vh;
     overflow-y: auto;
     z-index: 101;
     transition: all .4s ease;
-
-    @media(max-width: 700px) {
-        padding: 20px;
-    }
 
     &::-webkit-scrollbar {
         width: 14px;
@@ -140,8 +136,28 @@ export default {
                 font-size: 18px;
                 font-weight: 700;
                 line-height: 23px;
-                color: $black-color;
-                max-width: 350px;
+                color: $red-color;
+            }
+        }
+        main {
+            &:deep(p) {
+                color: $medium-grey;
+                font-size: 13px;
+                font-weight: 500;
+                line-height: 23px;
+            }
+            &:deep(.buttons) {
+                display: flex;
+                margin-top: 25px;
+
+                .btn {
+                    &:first-child {
+                        margin-right: 8px;
+                    }
+                    &:last-child {
+                        margin-left: 8px;
+                    }
+                }
             }
         }
     }
@@ -151,7 +167,7 @@ export default {
 
         header {
             .modal-name {
-                color: $black-color;
+                color: $red-color;
             }
         }
     }
@@ -160,7 +176,7 @@ export default {
 
         header {
             .modal-name {
-                color: #fff;
+                color: $red-color;
             }
         }
     }

@@ -26,6 +26,7 @@
 import draggable from 'vuedraggable'
 import BoardCard from '@/components/Board/BoardCard.vue';
 import { computed } from '@vue/runtime-core';
+import { useStore } from 'vuex';
 
 export default {
     name: 'BoardItem',
@@ -37,38 +38,24 @@ export default {
     },
     components: { BoardCard, draggable },
     setup(props) {
-        let todos = {
-            boards: [
-                {
-                    id : 1,
-                    name : 'test'
-                },
-                {
-                    id : 2,
-                    name : 'test2'
-                },
-                {
-                    id : 3,
-                    name : 'test3'
-                },
-                {
-                    id : 4,
-                    name : 'test4'
-                },
-            ]
-        }
-
+        const store = useStore();
 
         const cards = computed({
             get() {
                 return props.column.tasks;
             },
             set(newValue) {
-                console.log(newValue);
+                newValue.filter(i => i.status = props.column.name);
+                const newList = {
+                    id: props.column.id,
+                    status: props.column.name,
+                    tasks: newValue
+                }              
+                store.dispatch('UPDATE_TASKS', newList);
             }
         })
 
-        return { todos, cards }
+        return { cards }
     }
 }
 </script>
