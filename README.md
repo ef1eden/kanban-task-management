@@ -1,24 +1,26 @@
-# kanban-task
+# Frontend Mentor - Kanban task management web app
 
-## Project setup
-```
-npm install
-```
+This is a solution to the [Entertainment web app challenge on Frontend Mentor](/). Frontend Mentor challenges help you improve your coding skills by building realistic project.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+### The challenge
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Users should be able to:
 
-### Lints and fixes files
-```
-npm run lint
-```
+- View the optimal layout for the app depending on their device's screen size
+- See hover states for all interactive elements on the page
+- Create, read, update, and delete boards and tasks
+- Receive form validations when trying to create/edit boards and tasks
+- Mark subtasks as complete and move tasks between columns
+- Hide/show the board sidebar
+- Toggle the theme between light/dark modes
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Links
+
+- Live Site URL: https://mc-kanban.netlify.app/
+
+### Built with
+- [Vue.js]
+- [Vuex]
+- vue-draggable
+- vue-accessible-color-picker
+- vue-inline-svg
